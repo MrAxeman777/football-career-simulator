@@ -6,7 +6,7 @@ ashwin = Player(
     "LW",
     17,
     "USA",
-    "Manchester United Academy",
+    "FC Dallas Academy",
     72,
     93
 )

@@ -2,6 +2,7 @@ from season import simulate_season
 from transfer import transfer_window
 from trophies import check_trophies
 from national_team import national_team_callup
+from awards import check_awards
 
 
 def start_career(player):
@@ -19,18 +20,24 @@ def start_career(player):
         # Club season
         simulate_season(player)
 
-        # Trophy chances
+        # Trophy check
         check_trophies(player)
 
-        # International football
+        # Awards check
+        check_awards(player)
+
+        # International career
         national_team_callup(player)
 
-        # Transfers every summer
+        # Transfer window
         transfer_window(player)
 
-        # Age increases
+        # Increase age
         player.age += 1
 
 
     print("\n🏁 Career Finished!")
     print(f"{player.name} retired at age {player.age}")
+
+    print("\nFinal Career Summary:")
+    player.show_profile()

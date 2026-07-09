@@ -1,21 +1,15 @@
-import random
+class TrophyRoom:
+
+    def __init__(self):
+
+        self.trophies = []
 
 
-def check_trophies(player):
+    def add_trophy(self, trophy):
 
-    chance = random.randint(1, 100)
+        self.trophies.append(trophy)
 
-    if chance <= 25:
-        trophy = "League Title 🏆"
-        player.trophies.append(trophy)
-        print(f"\n🏆 Won: {trophy}")
 
-    if player.rating >= 85 and chance <= 15:
-        trophy = "Champions League 🏆"
-        player.trophies.append(trophy)
-        print(f"\n🏆 Won: {trophy}")
+    def get_trophies(self):
 
-    if player.age >= 18 and chance <= 10:
-        trophy = "International Trophy 🌎"
-        player.trophies.append(trophy)
-        print(f"\n🏆 Won: {trophy}")
+        return self.trophies

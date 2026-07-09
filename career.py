@@ -1,6 +1,7 @@
 from season import simulate_season
 from transfer import transfer_window
 from trophies import check_trophies
+from national_team import national_team_callup
 
 
 def start_career(player):
@@ -15,15 +16,19 @@ def start_career(player):
         print(f"Overall: {player.rating}")
         print("====================")
 
+        # Club season
         simulate_season(player)
 
-        # Trophy check after each season
+        # Trophy chances
         check_trophies(player)
 
-        # Transfer window every summer
+        # International football
+        national_team_callup(player)
+
+        # Transfers every summer
         transfer_window(player)
 
-        # Player gets older
+        # Age increases
         player.age += 1
 
 

@@ -13,7 +13,7 @@ class Player:
         # Overall
         self.rating = 60
 
-        # Attributes
+        # Skills
         self.pace = 60
         self.shooting = 60
         self.passing = 60
@@ -21,37 +21,37 @@ class Player:
         self.defending = 60
         self.physical = 60
 
-        # Stats
+        # Career stats
         self.matches = 0
         self.goals = 0
         self.assists = 0
 
-        # Money
+        self.fame = 0
         self.salary = 0
 
-        # Reputation
-        self.fame = 0
 
 
     def upgrade(self, attribute):
 
         if hasattr(self, attribute):
 
-            current = getattr(self, attribute)
+            value = getattr(self, attribute)
 
-            if current < 99:
+            if value < 99:
+
                 setattr(
                     self,
                     attribute,
-                    current + 3
+                    min(value + 3, 99)
                 )
 
                 self.update_rating()
 
 
+
     def update_rating(self):
 
-        stats = [
+        skills = [
 
             self.pace,
             self.shooting,
@@ -62,7 +62,7 @@ class Player:
 
         ]
 
-        self.rating = sum(stats) // len(stats)
+        self.rating = sum(skills) // len(skills)
 
 
 
@@ -71,6 +71,7 @@ class Player:
         self.matches += 1
         self.goals += goals
         self.assists += assists
+
 
 
     def age_up(self):
@@ -90,8 +91,10 @@ class Player:
         return {
 
             "Name": self.name,
+            "Nationality": self.nationality,
             "Position": self.position,
             "Club": self.club,
+
             "Age": self.age,
             "Overall": self.rating,
 
@@ -99,6 +102,8 @@ class Player:
             "Shooting": self.shooting,
             "Passing": self.passing,
             "Dribbling": self.dribbling,
+            "Defending": self.defending,
+            "Physical": self.physical,
 
             "Matches": self.matches,
             "Goals": self.goals,

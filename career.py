@@ -1,43 +1,31 @@
-from season import simulate_season
-from transfer import transfer_window
-from trophies import check_trophies
-from national_team import national_team_callup
-from awards import check_awards
+class Career:
+
+    def __init__(self, player):
+
+        self.player = player
+        self.club = "Youth Academy"
+
+        self.history = []
 
 
-def start_career(player):
+    def add_season(self, season, club, goals, assists, trophies):
 
-    print(f"🚀 Career Started: {player.name}")
+        self.history.append({
 
-    while player.age < 38:
+            "season": season,
+            "club": club,
+            "goals": goals,
+            "assists": assists,
+            "trophies": trophies
 
-        print("\n====================")
-        print(f"Age: {player.age}")
-        print(f"Club: {player.club}")
-        print(f"Overall: {player.rating}")
-        print("====================")
-
-        # Club season
-        simulate_season(player)
-
-        # Trophy check
-        check_trophies(player)
-
-        # Awards check
-        check_awards(player)
-
-        # International career
-        national_team_callup(player)
-
-        # Transfer window
-        transfer_window(player)
-
-        # Increase age
-        player.age += 1
+        })
 
 
-    print("\n🏁 Career Finished!")
-    print(f"{player.name} retired at age {player.age}")
+    def transfer(self, new_club):
 
-    print("\nFinal Career Summary:")
-    player.show_profile()
+        self.club = new_club
+
+
+    def get_history(self):
+
+        return self.history

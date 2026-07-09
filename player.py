@@ -7,7 +7,7 @@ class Player:
         self.nationality = nationality
         self.club = club
 
-        # Overall ratings
+        # Ratings
         self.rating = rating
         self.potential = potential
 
@@ -19,10 +19,15 @@ class Player:
         self.defending = 58
         self.physical = 73
 
-        # Career statistics
+        # Club career stats
         self.games = 0
         self.goals = 0
         self.assists = 0
+
+        # International stats
+        self.international_games = 0
+        self.international_goals = 0
+        self.international_assists = 0
 
         # Achievements
         self.trophies = []
@@ -52,10 +57,15 @@ class Player:
         print(f"Defending: {self.defending}")
         print(f"Physical: {self.physical}")
 
-        print("\nCareer Stats:")
+        print("\nClub Career:")
         print(f"Games: {self.games}")
         print(f"Goals: {self.goals}")
         print(f"Assists: {self.assists}")
+
+        print("\nInternational Career:")
+        print(f"Games: {self.international_games}")
+        print(f"Goals: {self.international_goals}")
+        print(f"Assists: {self.international_assists}")
 
         print("\nTrophies:")
         for trophy in self.trophies:

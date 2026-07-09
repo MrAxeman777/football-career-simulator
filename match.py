@@ -1,72 +1,54 @@
 import random
 
 
-opponents = [
-    "LA Galaxy",
-    "Inter Miami",
-    "Seattle Sounders",
-    "New York City FC",
-    "Atlanta United",
-    "Sporting KC"
-]
-
-
 def play_match(player):
-
-    opponent = random.choice(opponents)
-
-    print("\n====================")
-    print(f"⚽ {player.club} vs {opponent}")
-    print("====================")
-
 
     goals = 0
     assists = 0
 
-    chances = random.randint(1, 5)
+
+    performance = (
+
+        player.rating
+        + player.dribbling
+        + player.shooting
+
+    ) / 3
 
 
-    for i in range(chances):
-
-        event = random.randint(1, 100)
-
-        if event <= 35:
-
-            goals += 1
-
-            minute = random.randint(1, 90)
-
-            print(
-                f"{minute}' GOAL!!! {player.name} scores!"
-            )
-
-        elif event <= 60:
-
-            assists += 1
-
-            minute = random.randint(1, 90)
-
-            print(
-                f"{minute}' ASSIST!!! {player.name} creates a goal!"
-            )
+    chance = random.randint(1,100)
 
 
-    rating = round(random.uniform(6.5, 10.0), 1)
+    if chance < performance:
+
+        goals = random.randint(0,3)
+
+        assists = random.randint(0,2)
+
+    else:
+
+        goals = random.randint(0,1)
+
+        assists = 0
 
 
-    player.goals += goals
-    player.assists += assists
-    player.games += 1
+
+    player.add_match_stats(
+        goals,
+        assists
+    )
 
 
-    print(f"""
-Full Time!
+    rating = random.randint(
+        5,
+        10
+    )
 
-{player.name} Match Stats:
 
-Goals: {goals}
-Assists: {assists}
-Match Rating: {rating}
-""")
+    return {
 
-    return rating
+        "goals": goals,
+        "assists": assists,
+        "match_rating": rating
+
+    }

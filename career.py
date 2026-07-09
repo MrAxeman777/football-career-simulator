@@ -1,4 +1,5 @@
 from season import simulate_season
+from transfer import transfer_window
 
 
 def start_career(player):
@@ -15,8 +16,11 @@ def start_career(player):
 
         simulate_season(player)
 
+        # Transfer window every summer
+        transfer_window(player)
+
         player.age += 1
 
 
     print("\n🏁 Career Finished!")
-    print(f"{player.name} has retired at age {player.age}")
+    print(f"{player.name} retired at age {player.age}")

@@ -1,7 +1,7 @@
 import streamlit as st
 
 from player import Player
-from career import start_career
+from season import simulate_season
 
 
 st.title("⚽ Football Career Simulator")
@@ -46,8 +46,27 @@ if st.button("Start Career"):
         93
     )
 
+
     st.success(
         f"{name}'s career has started!"
     )
 
-    player.show_profile()
+
+    st.header("👤 Player Profile")
+
+    st.write(f"**Name:** {player.name}")
+    st.write(f"**Position:** {player.position}")
+    st.write(f"**Club:** {player.club}")
+    st.write(f"**Overall:** {player.rating}")
+    st.write(f"**Potential:** {player.potential}")
+
+
+    st.header("📊 Season Simulation")
+
+    simulate_season(player)
+
+
+    st.write(f"Games: {player.games}")
+    st.write(f"Goals: {player.goals}")
+    st.write(f"Assists: {player.assists}")
+    st.write(f"New Rating: {player.rating}")

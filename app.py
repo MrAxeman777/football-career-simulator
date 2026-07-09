@@ -1,198 +1,196 @@
-import streamlit as st
+import random
+import time
 
 from player import Player
-from season import simulate_season
-from transfer import transfer_window
-from trophies import check_trophies
-from awards import check_awards
-from national_team import national_team_callup
+from career import Career
+from trophies import TrophyRoom
+from awards import Awards
 
 
-st.set_page_config(
-    page_title="Football Career Simulator",
-    page_icon="⚽"
-)
+def main():
 
+    print("====================================")
+    print("⚽ FOOTBALL CAREER MODE SIMULATOR ⚽")
+    print("====================================")
 
-st.title("⚽ Football Career Simulator")
+    # Create player
+    name = input("Enter your player's name: ")
 
-st.write(
-    "Create your player and simulate an entire football career!"
-)
+    position = input(
+        "Choose position (ST, LW, RW, CAM, CM, CDM, CB, LB, RB, GK): "
+    ).upper()
 
-
-# Player creation
-
-name = st.text_input(
-    "Player Name",
-    "Ashwin"
-)
-
-
-position = st.selectbox(
-    "Position",
-    ["LW", "RW", "ST", "CAM", "CM"]
-)
-
-
-age = st.number_input(
-    "Age",
-    15,
-    40,
-    17
-)
-
-
-nationality = st.text_input(
-    "Nationality",
-    "USA"
-)
-
-
-club = st.text_input(
-    "Starting Club",
-    "FC Dallas Academy"
-)
-
-
-rating = st.slider(
-    "Starting Rating",
-    50,
-    99,
-    72
-)
-
-
-potential = st.slider(
-    "Potential",
-    50,
-    99,
-    93
-)
-
-
-
-if st.button("🚀 Start Career"):
+    nationality = input("Enter nationality: ")
 
     player = Player(
         name,
         position,
-        age,
-        nationality,
-        club,
-        rating,
-        potential
+        nationality
     )
 
-
-    st.success(
-        f"{player.name}'s career has started!"
-    )
-
-
-    # Career simulation
-
-    seasons = []
-
-    while player.age < 38:
-
-        current_age = player.age
-
-        simulate_season(player)
-
-        check_trophies(player)
-
-        check_awards(player)
-
-        national_team_callup(player)
-
-        transfer_window(player)
+    career = Career(player)
+    trophies = TrophyRoom()
+    awards = Awards()
 
 
-        seasons.append(
-            {
-                "Age": current_age,
-                "Club": player.club,
-                "Rating": player.rating,
-                "Goals": player.goals,
-                "Assists": player.assists
-            }
+    print("\nCareer Started!")
+    print("------------------------------------")
+
+    print(player)
+
+
+    seasons = int(input("\nHow many seasons do you want to simulate? "))
+
+
+    for year in range(1, seasons + 1):
+
+        print("\n==============================")
+        print(f"Season {year}")
+        print("==============================")
+
+        time.sleep(1)
+
+
+        # Generate season stats
+        goals = random.randint(0, 35)
+        assists = random.randint(0, 20)
+        matches = random.randint(20, 55)
+
+        trophies_won = []
+
+
+        print("\nSeason Stats:")
+        print(f"Matches: {matches}")
+        print(f"Goals: {goals}")
+        print(f"Assists: {assists}")
+
+
+        # Player growth
+        improvement = random.randint(1, 4)
+
+        player.rating += improvement
+
+        if player.rating > 99:
+            player.rating = 99
+
+
+        print(
+            f"\n⭐ Overall increased by {improvement}!"
+        )
+        print(
+            f"New Rating: {player.rating}"
         )
 
 
-        player.age += 1
+        # Awards
+        if goals >= 30:
+
+            awards.add_award(
+                "Golden Boot"
+            )
+
+            print(
+                "🏆 You won the Golden Boot!"
+            )
 
 
+        if player.rating >= 90:
 
-    # Results page
+            awards.add_award(
+                "Ballon d'Or"
+            )
 
-    st.header("👤 Final Player Card")
+            print(
+                "🌟 You won the Ballon d'Or!"
+            )
 
 
-    col1, col2 = st.columns(2)
+        # Trophies
+        chance = random.randint(1, 100)
+
+        if chance <= 30:
+
+            trophy = random.choice(
+                [
+                    "League Title",
+                    "Champions League",
+                    "Domestic Cup"
+                ]
+            )
+
+            trophies.add_trophy(
+                trophy
+            )
+
+            trophies_won.append(trophy)
+
+            print(
+                f"🏆 Won {trophy}!"
+            )
 
 
-    with col1:
-        st.write(
-            f"""
-            **Name:** {player.name}
-
-            **Position:** {player.position}
-
-            **Nationality:** {player.nationality}
-
-            **Final Club:** {player.club}
-
-            **Final Rating:** {player.rating}
-
-            **Potential:** {player.potential}
-            """
+        # Save season
+        career.add_season(
+            year,
+            goals,
+            assists,
+            trophies_won
         )
 
 
-    with col2:
+        # Transfer chance
 
-        st.write(
-            f"""
-            **Games:** {player.games}
+        if random.randint(1,100) <= 25:
 
-            **Goals:** {player.goals}
+            new_club = random.choice(
+                [
+                    "Manchester United",
+                    "Real Madrid",
+                    "Barcelona",
+                    "Bayern Munich",
+                    "PSG",
+                    "Manchester City",
+                    "Liverpool"
+                ]
+            )
 
-            **Assists:** {player.assists}
+            career.transfer(
+                new_club
+            )
 
-            **International Games:** {player.international_games}
-
-            **International Goals:** {player.international_goals}
-            """
-        )
-
-
-    st.header("🏆 Trophies")
-
-    if player.trophies:
-
-        for trophy in player.trophies:
-            st.write("🏆", trophy)
-
-    else:
-        st.write("No trophies won")
+            print(
+                f"🔄 Transferred to {new_club}"
+            )
 
 
-
-    st.header("⭐ Awards")
-
-    if player.awards:
-
-        for award in player.awards:
-            st.write("⭐", award)
-
-    else:
-        st.write("No awards won")
+    print("\n\n====================================")
+    print("🏁 CAREER COMPLETE")
+    print("====================================")
 
 
+    print("\nPLAYER PROFILE")
+    print("------------------------------------")
+    print(player)
 
-    st.header("📈 Career Timeline")
 
-    st.dataframe(
-        seasons
-    )
+    print("\nTROPHIES")
+    print("------------------------------------")
+
+    trophies.show()
+
+
+    print("\nAWARDS")
+    print("------------------------------------")
+
+    awards.show()
+
+
+    print("\nCAREER HISTORY")
+    print("------------------------------------")
+
+    career.show_history()
+
+
+
+if __name__ == "__main__":
+    main()

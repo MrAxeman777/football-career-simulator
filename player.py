@@ -6,35 +6,102 @@ class Player:
         self.position = position
         self.nationality = nationality
 
-        self.age = 16
-        self.rating = 65
+        # Career info
+        self.age = 17
+        self.club = "Youth Academy"
 
+        # Overall
+        self.rating = 60
+
+        # Attributes
+        self.pace = 60
+        self.shooting = 60
+        self.passing = 60
+        self.dribbling = 60
+        self.defending = 60
+        self.physical = 60
+
+        # Stats
+        self.matches = 0
         self.goals = 0
         self.assists = 0
 
+        # Money
+        self.salary = 0
 
-    def improve(self, amount):
-
-        self.rating += amount
-
-        if self.rating > 99:
-            self.rating = 99
+        # Reputation
+        self.fame = 0
 
 
-    def add_stats(self, goals, assists):
+    def upgrade(self, attribute):
 
+        if hasattr(self, attribute):
+
+            current = getattr(self, attribute)
+
+            if current < 99:
+                setattr(
+                    self,
+                    attribute,
+                    current + 3
+                )
+
+                self.update_rating()
+
+
+    def update_rating(self):
+
+        stats = [
+
+            self.pace,
+            self.shooting,
+            self.passing,
+            self.dribbling,
+            self.defending,
+            self.physical
+
+        ]
+
+        self.rating = sum(stats) // len(stats)
+
+
+
+    def add_match_stats(self, goals, assists):
+
+        self.matches += 1
         self.goals += goals
         self.assists += assists
 
 
-    def __str__(self):
+    def age_up(self):
 
-        return (
-            f"Name: {self.name}\n"
-            f"Position: {self.position}\n"
-            f"Nationality: {self.nationality}\n"
-            f"Age: {self.age}\n"
-            f"Rating: {self.rating}\n"
-            f"Career Goals: {self.goals}\n"
-            f"Career Assists: {self.assists}"
-        )
+        self.age += 1
+
+
+
+    def transfer(self, club):
+
+        self.club = club
+
+
+
+    def info(self):
+
+        return {
+
+            "Name": self.name,
+            "Position": self.position,
+            "Club": self.club,
+            "Age": self.age,
+            "Overall": self.rating,
+
+            "Pace": self.pace,
+            "Shooting": self.shooting,
+            "Passing": self.passing,
+            "Dribbling": self.dribbling,
+
+            "Matches": self.matches,
+            "Goals": self.goals,
+            "Assists": self.assists
+
+        }

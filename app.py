@@ -1,197 +1,243 @@
 import streamlit as st
-import random
 
 from player import Player
 from career import Career
-from trophies import TrophyRoom
-from awards import Awards
+from match import play_match
+from events import random_event
 
 
 st.set_page_config(
-    page_title="Football Career Simulator",
+    page_title="⚽ Soccer Career Mode",
     page_icon="⚽"
 )
 
 
-st.title("⚽ Football Career Simulator")
+st.title("⚽ Soccer Career Mode")
+st.caption("Retro Bowl style football career simulator")
 
 
-name = st.text_input(
-    "Player Name"
-)
+# Create player
+if "career" not in st.session_state:
+
+    st.session_state.career = None
 
 
-position = st.selectbox(
-    "Position",
-    [
-        "ST",
-        "LW",
-        "RW",
-        "CAM",
-        "CM",
-        "CDM",
-        "CB",
-        "LB",
-        "RB",
-        "GK"
-    ]
-)
+
+if st.session_state.career is None:
 
 
-nationality = st.text_input(
-    "Nationality"
-)
+    st.header("Create Your Player")
 
 
-seasons = st.slider(
-    "Career Length",
-    1,
-    25,
-    10
-)
-
-
-if st.button("🚀 Start Career"):
-
-
-    player = Player(
-        name,
-        position,
-        nationality
+    name = st.text_input(
+        "Player Name"
     )
 
 
-    career = Career(player)
-
-    trophies = TrophyRoom()
-
-    awards = Awards()
+    nationality = st.text_input(
+        "Nationality"
+    )
 
 
-    st.header("Career Begins!")
+    position = st.selectbox(
 
-    clubs = [
+        "Position",
 
-        "Manchester United",
-        "Real Madrid",
-        "Barcelona",
-        "Manchester City",
-        "Bayern Munich",
-        "PSG",
-        "Liverpool"
+        [
+            "ST",
+            "LW",
+            "RW",
+            "CAM",
+            "CM",
+            "CDM",
+            "CB",
+            "LB",
+            "RB",
+            "GK"
+        ]
 
-    ]
-
-
-    current_club = random.choice(clubs)
-
-
-    for season in range(1, seasons + 1):
-
-        goals = random.randint(5,45)
-
-        assists = random.randint(2,25)
+    )
 
 
-        player.add_stats(
-            goals,
-            assists
-        )
+    if st.button("🚀 Start Career"):
 
 
-        improvement = random.randint(1,4)
+        player = Player(
 
-        player.improve(
-            improvement
-        )
-
-
-        won = []
-
-
-        if random.randint(1,100) <= 35:
-
-            trophy = random.choice(
-                [
-                    "League Title",
-                    "Champions League",
-                    "Domestic Cup"
-                ]
-            )
-
-            trophies.add_trophy(trophy)
-
-            won.append(trophy)
-
-
-        if goals >= 35:
-
-            awards.add_award(
-                "Golden Boot"
-            )
-
-
-        if player.rating >= 90:
-
-            awards.add_award(
-                "Ballon d'Or"
-            )
-
-
-        career.add_season(
-
-            season,
-            current_club,
-            goals,
-            assists,
-            won
+            name,
+            position,
+            nationality
 
         )
 
 
-        st.subheader(
-            f"Season {season} - {current_club}"
+        career = Career(
+            player
         )
+
+
+        st.session_state.career = career
+
+
+        st.rerun()
+
+
+
+else:
+
+
+    career = st.session_state.career
+
+    player = career.player
+
+
+
+    st.header(
+        f"{player.name} - {player.club}"
+    )
+
+
+    # Player card
+
+    col1, col2, col3 = st.columns(3)
+
+
+    with col1:
+
+        st.metric(
+            "Overall",
+            player.rating
+        )
+
+
+    with col2:
+
+        st.metric(
+            "Age",
+            player.age
+        )
+
+
+    with col3:
+
+        st.metric(
+            "Goals",
+            player.goals
+        )
+
+
+
+    st.divider()
+
+
+    # Actions
+
+
+    st.subheader(
+        "Actions"
+    )
+
+
+    if st.button("⚽ Play Match"):
+
+
+        result = play_match(
+            player
+        )
+
+
+        st.success(
+            "Match Complete!"
+        )
+
 
         st.write(
-            f"⚽ Goals: {goals}"
+            f"Goals: {result['goals']}"
         )
+
 
         st.write(
-            f"🎯 Assists: {assists}"
+            f"Assists: {result['assists']}"
         )
+
 
         st.write(
-            f"⭐ Rating: {player.rating}"
+            f"Match Rating: {result['match_rating']}/10"
         )
 
 
-    st.success(
-        "Career Finished!"
+        st.info(
+            random_event(player)
+        )
+
+
+
+
+    if st.button("🏋 Train"):
+
+
+        message = career.train()
+
+
+        st.success(
+            message
+        )
+
+
+
+
+    if st.button("🔄 Transfer Window"):
+
+
+        st.info(
+            career.transfer_offer()
+        )
+
+
+
+
+    if st.button("⏭ End Season"):
+
+
+        st.write(
+            career.check_trophies()
+        )
+
+
+        st.write(
+            career.check_awards()
+        )
+
+
+        career.end_season()
+
+
+        st.success(
+            f"Season {career.season} started!"
+        )
+
+
+
+
+    st.divider()
+
+
+    st.subheader(
+        "📊 Player Stats"
     )
 
 
-    st.header("🏆 Final Player")
-
-    st.write(player.__dict__)
-
-
-    st.header("🏆 Trophies")
-
-    st.write(
-        trophies.get_trophies()
+    st.json(
+        player.info()
     )
 
 
-    st.header("🌟 Awards")
 
-    st.write(
-        awards.get_awards()
+    st.subheader(
+        "🏆 Career Summary"
     )
 
 
-    st.header("📜 Career History")
-
-    st.write(
-        career.get_history()
+    st.json(
+        career.summary()
     )

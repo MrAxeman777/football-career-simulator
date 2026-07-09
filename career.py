@@ -1,5 +1,6 @@
 from season import simulate_season
 from transfer import transfer_window
+from trophies import check_trophies
 
 
 def start_career(player):
@@ -16,9 +17,13 @@ def start_career(player):
 
         simulate_season(player)
 
+        # Trophy check after each season
+        check_trophies(player)
+
         # Transfer window every summer
         transfer_window(player)
 
+        # Player gets older
         player.age += 1
 
 

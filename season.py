@@ -1,39 +1,53 @@
-import random
+from match import play_match
 
 
 def simulate_season(player):
 
     print("\n--- Season Started ---")
 
-    games = random.randint(20, 45)
-    goals = random.randint(5, 25)
-    assists = random.randint(5, 20)
+    total_games = 30
+    total_rating = 0
 
-    player.games += games
-    player.goals += goals
-    player.assists += assists
+
+    for game in range(total_games):
+
+        print(f"\nMatch {game + 1}/{total_games}")
+
+        rating = play_match(player)
+
+        total_rating += rating
+
+
+    average_rating = round(total_rating / total_games, 2)
+
+
+    print(f"""
+====================
+Season Finished!
+
+Games: {player.games}
+Goals: {player.goals}
+Assists: {player.assists}
+
+Average Match Rating:
+{average_rating}
+
+Overall:
+{player.rating}
+====================
+""")
 
 
     # Player growth
-    growth = random.randint(1, 4)
+    if average_rating >= 8:
+        player.rating += 3
 
-    if player.rating < player.potential:
-        player.rating += growth
+    elif average_rating >= 7:
+        player.rating += 2
 
-        if player.rating > player.potential:
-            player.rating = player.potential
+    else:
+        player.rating += 1
 
 
-    # Awards
-    if goals + assists >= 25:
-        player.awards.append("Breakthrough Player Award")
-
-    print(f"""
-Season Finished!
-
-Games: {games}
-Goals: {goals}
-Assists: {assists}
-
-New Rating: {player.rating}
-""")
+    if player.rating > player.potential:
+        player.rating = player.potential
